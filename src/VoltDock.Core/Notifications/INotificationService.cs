@@ -50,11 +50,6 @@ public interface INotificationService : IAsyncDisposable
     bool AreNotificationsSuppressed { get; }
 
     /// <summary>
-    /// Event raised when notification suppression state changes.
-    /// </summary>
-    event EventHandler<bool>? SuppressionChanged;
-
-    /// <summary>
     /// Gets the history of shown notifications.
     /// </summary>
     IReadOnlyList<BatteryNotification> GetHistory(int maxCount = 100);
