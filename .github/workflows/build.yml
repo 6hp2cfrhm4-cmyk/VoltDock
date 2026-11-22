@@ -31,6 +31,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Install Windows Desktop workload
+        run: dotnet workload install windowsdesktop --skip-manifest-update
+
       - name: Restore dependencies
         run: dotnet restore ${{ env.SOLUTION_FILE }}
 
@@ -60,6 +63,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Install Windows Desktop workload
+        run: dotnet workload install windowsdesktop --skip-manifest-update
+
       - name: Install dotnet-format
         run: dotnet tool install -g dotnet-format
 
@@ -81,6 +87,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Windows Desktop workload
+        run: dotnet workload install windowsdesktop --skip-manifest-update
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.SOLUTION_FILE }}
@@ -109,6 +118,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Install Windows Desktop workload
+        run: dotnet workload install windowsdesktop --skip-manifest-update
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.SOLUTION_FILE }}
