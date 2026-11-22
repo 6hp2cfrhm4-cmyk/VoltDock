@@ -12,7 +12,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         DataContext = viewModel;
-        
+
         // Handle window state
         StateChanged += MainWindow_StateChanged;
         Closing += MainWindow_Closing;

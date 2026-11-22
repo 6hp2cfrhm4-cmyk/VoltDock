@@ -8,7 +8,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>CS1591;CS1573;NU1603</WarningsNotAsErrors>
+    <WarningsNotAsErrors>CS1591;CS1573;NU1603;CA1416</WarningsNotAsErrors>
     <Platforms>x64;ARM64</Platforms>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>

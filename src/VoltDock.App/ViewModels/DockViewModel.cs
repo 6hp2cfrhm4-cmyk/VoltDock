@@ -26,10 +26,10 @@ public sealed class DockViewModel : ViewModelBase
         _settingsService = settingsService;
 
         ToggleVisibilityCommand = new RelayCommand(ToggleVisibility);
-        
+
         // Subscribe to device changes
         _voltDockService.GetDevices().ForEach(AddDevice);
-        
+
         // TODO: Subscribe to device events from VoltDockService
         RefreshDevices();
     }
@@ -149,7 +149,7 @@ public sealed class DockDeviceViewModel : INotifyPropertyChanged
         _device = device;
         _dockSettings = dockSettings;
         _iconSize = dockSettings.IconSize;
-        _showPercentage = dockSettings.DisplayMode == DockDisplayMode.IconsWithPercent || 
+        _showPercentage = dockSettings.DisplayMode == DockDisplayMode.IconsWithPercent ||
                           dockSettings.DisplayMode == DockDisplayMode.ExpandedCards;
         _showBatteryIndicator = dockSettings.DisplayMode != DockDisplayMode.IconsOnly;
 
@@ -174,7 +174,7 @@ public sealed class DockDeviceViewModel : INotifyPropertyChanged
         set => SetField(ref _showBatteryIndicator, value);
     }
 
-    public object? IconSource => _device.IconPath != null 
+    public object? IconSource => _device.IconPath != null
         ? new System.Windows.Media.Imaging.BitmapImage(new Uri(_device.IconPath, UriKind.RelativeOrAbsolute))
         : null;
 

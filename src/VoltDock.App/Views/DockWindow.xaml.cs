@@ -180,7 +180,7 @@ public partial class DockWindow : Window
     private void Window_MouseLeave(object sender, MouseEventArgs e)
     {
         _isMouseOver = false;
-        
+
         if (_viewModel.Settings?.Dock?.AutoHide == AutoHideMode.OnMouseLeave)
         {
             FadeOut();
@@ -278,7 +278,7 @@ public partial class DockWindow : Window
         {
             _isDragging = false;
             ReleaseMouseCapture();
-            
+
             // Save new position as offset
             if (_viewModel.Settings?.Dock != null)
             {
@@ -292,12 +292,12 @@ public partial class DockWindow : Window
     {
         _autoHideTimer?.Stop();
         _autoHideTimer = null;
-        
+
         if (_viewModel.Settings != null)
         {
             _viewModel.Settings.Dock.PropertyChanged -= DockSettings_PropertyChanged;
         }
-        
+
         base.OnClosed(e);
     }
 }
