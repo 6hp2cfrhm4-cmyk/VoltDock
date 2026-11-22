@@ -29,4 +29,7 @@
     <Resource Include="Themes\**" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFrameworkIdentifier)'=='.NETCoreApp'">
+    <FrameworkReference Update="Microsoft.WindowsDesktop.App.WPF" />
+  </ItemGroup>
 </Project>
