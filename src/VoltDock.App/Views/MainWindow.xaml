@@ -63,52 +63,52 @@
                 <!-- Navigation -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="8,12">
                     <StackPanel>
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Dashboard"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsDashboardSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE80F;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="Обзор" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Devices"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Devices"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsDevicesSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE94E;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="Устройства" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Dock"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Dock"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsDockSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE7B4;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="Док" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Notifications"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Notifications"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsNotificationsSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE7B4;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="Уведомления" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Appearance"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Appearance"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsAppearanceSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE771;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="Внешний вид" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="Advanced"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="Advanced"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsAdvancedSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
@@ -117,14 +117,14 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Command="{Binding NavigateCommand}" CommandParameter="About"
+                        <ToggleButton Command="{Binding NavigateCommand}" CommandParameter="About"
                                 Style="{DynamicResource NavButtonStyle}"
                                 IsChecked="{Binding IsAboutSelected, Mode=OneWay}">
                             <StackPanel Orientation="Horizontal" Margin="12,10">
                                 <TextBlock Text="&#xE946;" FontFamily="Segoe Fluent Icons" FontSize="16" VerticalAlignment="Center" Margin="0,0,12,0"/>
                                 <TextBlock Text="О программе" VerticalAlignment="Center"/>
                             </StackPanel>
-                        </Button>
+                        </ToggleButton>
                     </StackPanel>
                 </ScrollViewer>
 
