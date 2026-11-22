@@ -13,7 +13,7 @@ env:
 
 jobs:
   build:
-    name: Build (${{ matrix.configuration }}, x64)
+    name: Build (${{ matrix.configuration }})
     runs-on: windows-latest
     strategy:
       matrix:
@@ -35,16 +35,16 @@ jobs:
         run: dotnet restore ${{ env.SOLUTION_FILE }}
 
       - name: Build solution
-        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform x64 --no-restore
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --no-restore
 
       - name: Run tests
-        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform x64 --no-build --logger "trx;LogFileName=test-results-${{ matrix.configuration }}-x64.trx" --collect:"XPlat Code Coverage"
+        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --no-build --logger "trx;LogFileName=test-results-${{ matrix.configuration }}.trx" --collect:"XPlat Code Coverage"
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results-${{ matrix.configuration }}-x64
+          name: test-results-${{ matrix.configuration }}
           path: "**/TestResults/*.trx"
           retention-days: 30
 
@@ -60,8 +60,13 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Install dotnet-format
+        run: dotnet tool install -g dotnet-format
+
       - name: Check formatting
         run: dotnet format ${{ env.SOLUTION_FILE }} --verify-no-changes --verbosity detailed
+        env:
+          PATH: ${{ env.PATH }}:~/.dotnet/tools
 
   security:
     name: Security Scan
@@ -69,6 +74,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -82,7 +89,7 @@ jobs:
         run: dotnet list ${{ env.SOLUTION_FILE }} package --vulnerable --include-transitive
 
       - name: Check for secrets
-        uses: gitleaks/gitleaks-action@v2.7.1
+        uses: gitleaks/gitleaks-action@v2
         with:
           config: .gitleaks.toml
           args: --no-git --verbose
@@ -109,10 +116,10 @@ jobs:
         run: dotnet restore ${{ env.SOLUTION_FILE }}
 
       - name: Build Release
-        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --platform x64 --no-restore
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --no-restore
 
       - name: Publish x64
-        run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --platform x64 --self-contained false -o ./publish/x64
+        run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --self-contained false -o ./publish/x64
 
       - name: Create Release Archive
         run: |
