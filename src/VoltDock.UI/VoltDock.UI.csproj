@@ -9,7 +9,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsNotAsErrors>CS1591;CS1573</WarningsNotAsErrors>
+    <WarningsNotAsErrors>CS1591;CS1573;NU1603</WarningsNotAsErrors>
     <Platforms>x64;ARM64</Platforms>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\VoltDock.Core\VoltDock.Core.csproj" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250117000" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.250205002" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>

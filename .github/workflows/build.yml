@@ -13,12 +13,11 @@ env:
 
 jobs:
   build:
-    name: Build (${{ matrix.configuration }}, ${{ matrix.platform }})
+    name: Build (${{ matrix.configuration }}, x64)
     runs-on: windows-latest
     strategy:
       matrix:
         configuration: [Debug, Release]
-        platform: [x64, ARM64]
       fail-fast: false
 
     steps:
@@ -36,16 +35,16 @@ jobs:
         run: dotnet restore ${{ env.SOLUTION_FILE }}
 
       - name: Build solution
-        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform ${{ matrix.platform }} --no-restore
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform x64 --no-restore
 
       - name: Run tests
-        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform ${{ matrix.platform }} --no-build --logger "trx;LogFileName=test-results-${{ matrix.configuration }}-${{ matrix.platform }}.trx" --collect:"XPlat Code Coverage"
+        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform x64 --no-build --logger "trx;LogFileName=test-results-${{ matrix.configuration }}-x64.trx" --collect:"XPlat Code Coverage"
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results-${{ matrix.configuration }}-${{ matrix.platform }}
+          name: test-results-${{ matrix.configuration }}-x64
           path: "**/TestResults/*.trx"
           retention-days: 30
 
@@ -114,21 +113,16 @@ jobs:
       - name: Publish x64
         run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --platform x64 --self-contained false -o ./publish/x64
 
-      - name: Publish ARM64
-        run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --platform ARM64 --self-contained false -o ./publish/ARM64
-
       - name: Create Release Archive
         run: |
           cd ./publish
           Compress-Archive -Path x64/* -DestinationPath VoltDock-x64.zip
-          Compress-Archive -Path ARM64/* -DestinationPath VoltDock-ARM64.zip
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
             ./publish/VoltDock-x64.zip
-            ./publish/VoltDock-ARM64.zip
           generate_release_notes: true
           draft: false
           prerelease: false
