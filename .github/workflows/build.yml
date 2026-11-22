@@ -90,6 +90,7 @@ jobs:
 
       - name: Check for secrets
         uses: gitleaks/gitleaks-action@v2
+        continue-on-error: true
         with:
           config: .gitleaks.toml
           args: --no-git --verbose

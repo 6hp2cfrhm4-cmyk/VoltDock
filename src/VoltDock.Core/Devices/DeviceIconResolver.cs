@@ -48,7 +48,7 @@ public sealed class DeviceIconResolver : IDeviceIconResolver
 
         var chargingName = $"{iconName}_Charging";
         GetIconInfo(chargingName, 32);
-        
+
         return Task.CompletedTask;
     }
 

@@ -370,7 +370,7 @@ public sealed class VoltDockService : IAsyncDisposable
         _logger.LogInformation("Device removed: {DeviceName} ({DeviceId})", e.Device.DisplayName, e.Device.Id);
     }
 
-    private void OnDeviceUpdated(object? sender, DeviceUpdatedEventArgs e)
+    private void OnDeviceUpdated(object? sender, VoltDock.Core.Devices.DeviceUpdatedEventArgs e)
     {
         // Device properties updated
     }
