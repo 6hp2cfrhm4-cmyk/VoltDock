@@ -46,4 +46,8 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <FrameworkReference Update="Microsoft.WindowsDesktop.App.WPF" />
+  </ItemGroup>
+
 </Project>
