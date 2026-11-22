@@ -7,6 +7,7 @@ using VoltDock.Core.Settings;
 using VoltDock.Core.Notifications;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using ProviderDeviceUpdatedEventArgs = VoltDock.Core.Devices.Providers.DeviceUpdatedEventArgs;
 
 /// <summary>
 /// Main VoltDock service coordinating all components.
@@ -346,7 +347,7 @@ public sealed class VoltDockService : IAsyncDisposable
         }
     }
 
-    private void OnProviderDeviceUpdated(object? sender, DeviceUpdatedEventArgs e)
+    private void OnProviderDeviceUpdated(object? sender, ProviderDeviceUpdatedEventArgs e)
     {
         _identityResolver.UpdateDevice(e.Device.Id, e.ProviderId, d =>
         {

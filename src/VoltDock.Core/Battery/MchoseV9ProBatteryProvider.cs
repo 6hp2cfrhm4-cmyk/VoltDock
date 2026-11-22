@@ -97,6 +97,11 @@ public sealed class MchoseV9ProBatteryProvider : IManufacturerBatteryProvider
         return new MchoseV9ProReader(device, _logger);
     }
 
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+
     private async Task<BatteryReading?> ReadUsbHidBatteryAsync(Device device, CancellationToken cancellationToken)
     {
         try

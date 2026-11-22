@@ -1,6 +1,8 @@
 namespace VoltDock.Core.Settings;
 
 using System.Text.Json.Serialization;
+using VoltDock.Core.Devices;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Dock position on screen.

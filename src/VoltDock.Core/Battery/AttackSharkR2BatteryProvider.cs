@@ -80,6 +80,11 @@ public sealed class AttackSharkR2BatteryProvider : IManufacturerBatteryProvider
         return new AttackSharkR2Reader(device, _logger);
     }
 
+    public ValueTask DisposeAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+
     private async Task<BatteryReading?> ReadUsbHidBatteryAsync(Device device, CancellationToken cancellationToken)
     {
         try
