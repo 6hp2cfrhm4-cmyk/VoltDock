@@ -218,7 +218,7 @@ public sealed class DockDeviceViewModel : INotifyPropertyChanged
         BatteryChargeState.Discharging => "Разряжается",
         BatteryChargeState.NotPresent => "Нет батареи",
         _ => "Неизвестно"
-    }
+    };
 
     private void OnPropertyChanged(string propertyName)
     {
