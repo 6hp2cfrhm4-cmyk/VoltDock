@@ -15,24 +15,8 @@ public sealed class NotificationService : INotificationService
     private readonly List<BatteryNotification> _history = new();
     private readonly object _historyLock = new();
     private const int MaxHistorySize = 100;
-    private bool _focusAssistSupported = true;
 
-    public bool AreNotificationsSuppressed
-    {
-        get
-        {
-            try
-            {
-                // Check Focus Assist / Quiet Hours status
-                return UserNotificationListener.Current.GetAccessStatus() != UserNotificationListenerAccessStatus.Allowed;
-            }
-            catch
-            {
-                // API not available or error - assume not suppressed
-                return false;
-            }
-        }
-    }
+    public bool AreNotificationsSuppressed => false; // Simplified - Focus Assist check requires specific Windows API
 
     public event EventHandler<bool>? SuppressionChanged;
 
@@ -40,9 +24,6 @@ public sealed class NotificationService : INotificationService
     {
         _logger = logger;
         _toastNotifier = ToastNotificationManager.CreateToastNotifier("VoltDock");
-
-        // Monitor focus assist changes
-        _ = MonitorSuppressionAsync();
     }
 
     public async Task<bool> ShowNotificationAsync(BatteryNotification notification, CancellationToken cancellationToken = default)
@@ -128,28 +109,6 @@ public sealed class NotificationService : INotificationService
         lock (_historyLock)
         {
             _history.Clear();
-        }
-    }
-
-    private async Task MonitorSuppressionAsync()
-    {
-        var lastState = AreNotificationsSuppressed;
-        while (true)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(30));
-            try
-            {
-                var currentState = AreNotificationsSuppressed;
-                if (currentState != lastState)
-                {
-                    lastState = currentState;
-                    SuppressionChanged?.Invoke(this, currentState);
-                }
-            }
-            catch
-            {
-                // Ignore errors in monitoring
-            }
         }
     }
 

@@ -30,14 +30,41 @@ public sealed class DeviceIdentityResolver : IDeviceIdentityResolver
                 return existingDevice;
             }
 
-            // New device
+            // New device - create with canonical ID
             var canonicalId = GenerateCanonicalId(device, providerId);
-            device.Id = canonicalId;
-            _devices[canonicalId] = device;
+            var canonicalDevice = new Device(canonicalId)
+            {
+                Name = device.Name,
+                Type = device.Type,
+                Manufacturer = device.Manufacturer,
+                Model = device.Model,
+                HardwareRevision = device.HardwareRevision,
+                FirmwareVersion = device.FirmwareVersion,
+                SerialNumber = device.SerialNumber,
+                BluetoothAddress = device.BluetoothAddress,
+                UsbVendorId = device.UsbVendorId,
+                UsbProductId = device.UsbProductId,
+                UsbVersion = device.UsbVersion,
+                IconPath = device.IconPath,
+                ConnectionState = device.ConnectionState,
+                BatteryInfo = device.BatteryInfo,
+                BatterySources = device.BatterySources,
+                InterfacePaths = device.InterfacePaths,
+                DeviceInstanceId = device.DeviceInstanceId,
+                DeviceContainerId = device.DeviceContainerId,
+                Metadata = device.Metadata,
+                FirstSeen = device.FirstSeen,
+                LastSeen = device.LastSeen,
+                IsPinned = device.IsPinned,
+                HideWhenDisconnected = device.HideWhenDisconnected,
+                CustomName = device.CustomName,
+            };
+
+            _devices[canonicalId] = canonicalDevice;
             _deviceProviders[canonicalId] = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { providerId };
 
-            RaiseDeviceCreated(device);
-            return device;
+            RaiseDeviceCreated(canonicalDevice);
+            return canonicalDevice;
         }
     }
 

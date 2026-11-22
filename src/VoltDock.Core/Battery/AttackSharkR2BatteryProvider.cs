@@ -150,7 +150,6 @@ public sealed class AttackSharkR2BatteryProvider : IManufacturerBatteryProvider
     {
         private readonly Device _device;
         private readonly ILogger _logger;
-        private HidDevice? _hidDevice;
 
         public Device Device => _device;
 

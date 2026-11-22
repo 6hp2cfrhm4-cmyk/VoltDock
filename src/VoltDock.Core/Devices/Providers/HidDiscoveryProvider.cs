@@ -29,7 +29,7 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
             if (_isActive) return;
 
             // Create watcher for all HID devices
-            var selector = HidDevice.GetDeviceSelector();
+            var selector = HidDevice.GetDeviceSelector(0, 0);
             _watcher = DeviceInformation.CreateWatcher(selector);
 
             _watcher.Added += OnDeviceAdded;
@@ -246,21 +246,9 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
 
     private bool HasBatteryReport(HidDevice device)
     {
-        try
-        {
-            // Check for Battery Report (Usage Page 0x000C, Usage 0x0001)
-            // Note: GetCollections may not be available on all Windows versions
-            var collections = device.GetCollections();
-            foreach (var collection in collections)
-            {
-                if (collection.UsagePage == 0x000C && collection.UsageId == 0x0001)
-                    return true;
-            }
-        }
-        catch
-        {
-            // Ignore errors - API may not be available
-        }
+        // GetCollections is not available in the current Windows SDK version
+        // Battery report detection would require parsing the HID report descriptor
+        // For now, return false and rely on manufacturer-specific providers
         return false;
     }
 

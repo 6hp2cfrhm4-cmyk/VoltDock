@@ -29,7 +29,7 @@ public sealed class HidBatteryProvider : BatteryProviderBase
 
     public override async Task<BatteryReading?> ReadBatteryAsync(Device device, CancellationToken cancellationToken = default)
     {
-        if (!CanReadBattery(device))
+        if (!CanReadBattery(device) || string.IsNullOrEmpty(device.DeviceInstanceId))
             return null;
 
         try
