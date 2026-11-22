@@ -2,7 +2,6 @@ namespace VoltDock.Core.Devices.Providers;
 
 using VoltDock.Core.Devices;
 using Microsoft.Extensions.Logging;
-using Windows.Devices.Enumeration;
 using Windows.System.Power;
 
 /// <summary>
@@ -32,7 +31,7 @@ public sealed class WindowsPowerDiscoveryProvider : DiscoveryProviderBase
             if (_isActive) return;
 
             // Check if we have a battery
-            var status = BatteryStatus.GetDefault();
+            var status = GetBatteryStatus();
             if (status == null)
             {
                 _logger.LogInformation("No battery detected, Windows Power provider not started");
@@ -94,7 +93,7 @@ public sealed class WindowsPowerDiscoveryProvider : DiscoveryProviderBase
 
     public override async Task RefreshAsync(CancellationToken cancellationToken = default)
     {
-        var status = BatteryStatus.GetDefault();
+        var status = GetBatteryStatus();
         if (status != null && _discoveredDevices.TryGetValue("windows-power:battery", out var device))
         {
             UpdateBatteryInfo(device, status);
@@ -117,34 +116,60 @@ public sealed class WindowsPowerDiscoveryProvider : DiscoveryProviderBase
         });
     }
 
+    private BatteryStatus? GetBatteryStatus()
+    {
+        try
+        {
+            // Try to get battery status using the modern API
+            return BatteryStatus.GetDefault();
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private void UpdateBatteryInfo(Device device, BatteryStatus status)
     {
-        var level = (int)Math.Round(status.RemainingChargePercent * 100);
-        var chargeState = status.PowerSource switch
+        try
         {
-            PowerSource.AC => BatteryChargeState.Charging,
-            PowerSource.Battery => BatteryChargeState.Discharging,
-            _ => BatteryChargeState.Unknown
-        };
+            var level = (int)Math.Round(status.RemainingChargePercent * 100);
+            var chargeState = status.PowerSource switch
+            {
+                PowerSource.AC => BatteryChargeState.Charging,
+                PowerSource.Battery => BatteryChargeState.Discharging,
+                _ => BatteryChargeState.Unknown
+            };
 
-        if (status.RemainingChargePercent >= 1.0)
-            chargeState = BatteryChargeState.Full;
+            if (status.RemainingChargePercent >= 1.0)
+                chargeState = BatteryChargeState.Full;
 
-        device.BatteryInfo.PrimaryReading = new BatteryReading(
-            level,
-            chargeState,
-            BatteryHealth.Unknown,
-            BatterySource.WindowsPower,
-            componentId: "main",
-            componentName: "Battery");
+            device.BatteryInfo.PrimaryReading = new BatteryReading(
+                level,
+                chargeState,
+                BatteryHealth.Unknown,
+                BatterySource.WindowsPower,
+                componentId: "main",
+                componentName: "Battery");
 
-        // Add remaining time if available
-        if (status.RemainingDischargeTime.HasValue)
-        {
-            device.Metadata["RemainingTime"] = status.RemainingDischargeTime.Value;
+            // Add remaining time if available
+            if (status.RemainingDischargeTime.HasValue)
+            {
+                device.Metadata["RemainingTime"] = status.RemainingDischargeTime.Value;
+            }
+
+            device.Touch();
+            _lastStatus = status;
         }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to update battery info");
+        }
+    }
 
-        device.Touch();
-        _lastStatus = status;
+    public override async ValueTask DisposeAsync()
+    {
+        _pollTimer?.Dispose();
+        await base.DisposeAsync();
     }
 }

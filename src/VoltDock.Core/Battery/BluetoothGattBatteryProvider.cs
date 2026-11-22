@@ -195,7 +195,7 @@ public sealed class BluetoothGattBatteryProvider : BatteryProviderBase
 
         var dataReader = DataReader.FromBuffer(buffer);
         var level = dataReader.ReadByte();
-        return Math.Clamp(level, 0, 100);
+        return Math.Clamp((int)level, 0, 100);
     }
 
     public override async ValueTask DisposeAsync()

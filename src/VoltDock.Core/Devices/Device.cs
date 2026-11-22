@@ -8,7 +8,7 @@ public sealed class Device : IEquatable<Device>
     /// <summary>
     /// Unique persistent identifier for this device instance.
     /// </summary>
-    public string Id { get; }
+    public string Id { get; init; }
 
     /// <summary>
     /// Human-readable name of the device.

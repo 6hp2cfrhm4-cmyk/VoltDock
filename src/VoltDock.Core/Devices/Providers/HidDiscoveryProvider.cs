@@ -4,6 +4,7 @@ using VoltDock.Core.Devices;
 using Microsoft.Extensions.Logging;
 using Windows.Devices.Enumeration;
 using Windows.Devices.HumanInterfaceDevice;
+using Windows.Storage;
 
 /// <summary>
 /// Discovers HID devices (USB, 2.4GHz receivers, Bluetooth HID) using Windows.Devices.HumanInterfaceDevice.
@@ -194,8 +195,8 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
 
             var device = new Device($"hid:{deviceInfo.Id}")
             {
-                Name = hidDevice.ProductName ?? deviceInfo.Name,
-                Type = ClassifyHidDevice(hidDevice),
+                Name = GetDeviceName(hidDevice, deviceInfo),
+                Type = ClassifyHidDevice(hidDevice, deviceInfo),
                 DeviceInstanceId = deviceInfo.Id,
                 ConnectionState = DeviceConnectionState.Connected,
             };
@@ -227,11 +228,28 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
         }
     }
 
+    private string GetDeviceName(HidDevice hidDevice, DeviceInformation deviceInfo)
+    {
+        try
+        {
+            // Try to get product name from device properties first
+            if (deviceInfo.Properties.TryGetValue("System.ItemNameDisplay", out var name) && name is string n && !string.IsNullOrEmpty(n))
+                return n;
+            
+            return deviceInfo.Name ?? "Unknown HID Device";
+        }
+        catch
+        {
+            return deviceInfo.Name ?? "Unknown HID Device";
+        }
+    }
+
     private bool HasBatteryReport(HidDevice device)
     {
         try
         {
             // Check for Battery Report (Usage Page 0x000C, Usage 0x0001)
+            // Note: GetCollections may not be available on all Windows versions
             var collections = device.GetCollections();
             foreach (var collection in collections)
             {
@@ -241,7 +259,7 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
         }
         catch
         {
-            // Ignore errors
+            // Ignore errors - API may not be available
         }
         return false;
     }
@@ -279,9 +297,9 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
         }
     }
 
-    private DeviceType ClassifyHidDevice(HidDevice device)
+    private DeviceType ClassifyHidDevice(HidDevice device, DeviceInformation deviceInfo)
     {
-        var name = (device.ProductName ?? "").ToLowerInvariant();
+        var name = GetDeviceName(device, deviceInfo).ToLowerInvariant();
         var usagePage = device.UsagePage;
         var usageId = device.UsageId;
 

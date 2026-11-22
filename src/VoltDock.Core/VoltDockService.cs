@@ -69,7 +69,7 @@ public sealed class VoltDockService : IAsyncDisposable
         // Start discovery providers
         foreach (var provider in _discoveryProviders)
         {
-            if (_settings.Settings.Behavior.DisabledProviders.Contains(provider.ProviderId))
+            if (_settings.Settings.Advanced.DisabledProviders.Contains(provider.ProviderId))
             {
                 _logger.LogInformation("Provider {ProviderId} is disabled, skipping", provider.ProviderId);
                 continue;
@@ -249,7 +249,7 @@ public sealed class VoltDockService : IAsyncDisposable
         });
 
         var results = await Task.WhenAll(readTasks);
-        var validReadings = results.Where(r => r.HasValue).Select(r => r.Value).ToList();
+        var validReadings = results.Where(r => r.HasValue).Select(r => r!.Value).ToList();
 
         if (validReadings.Count > 0)
         {
@@ -295,8 +295,8 @@ public sealed class VoltDockService : IAsyncDisposable
         var warningLevel = thresholds?.WarningPercent ?? _settings.Settings.Notifications.GlobalWarningPercent;
         var criticalLevel = thresholds?.CriticalPercent ?? _settings.Settings.Notifications.GlobalCriticalPercent;
 
-        var notificationType = level <= criticalLevel ? BatteryNotificationType.Critical :
-                              level <= warningLevel ? BatteryNotificationType.Warning : null;
+        BatteryNotificationType? notificationType = level <= criticalLevel ? BatteryNotificationType.Critical :
+                                  level <= warningLevel ? BatteryNotificationType.Warning : null;
 
         if (notificationType.HasValue)
         {

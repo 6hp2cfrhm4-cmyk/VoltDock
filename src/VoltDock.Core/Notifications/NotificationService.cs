@@ -15,8 +15,24 @@ public sealed class NotificationService : INotificationService
     private readonly List<BatteryNotification> _history = new();
     private readonly object _historyLock = new();
     private const int MaxHistorySize = 100;
+    private bool _focusAssistSupported = true;
 
-    public bool AreNotificationsSuppressed => UserNotificationListener.Current.GetAccessStatus() != UserNotificationListenerAccessStatus.Allowed;
+    public bool AreNotificationsSuppressed
+    {
+        get
+        {
+            try
+            {
+                // Check Focus Assist / Quiet Hours status
+                return UserNotificationListener.Current.GetAccessStatus() != UserNotificationListenerAccessStatus.Allowed;
+            }
+            catch
+            {
+                // API not available or error - assume not suppressed
+                return false;
+            }
+        }
+    }
 
     public event EventHandler<bool>? SuppressionChanged;
 
@@ -121,11 +137,18 @@ public sealed class NotificationService : INotificationService
         while (true)
         {
             await Task.Delay(TimeSpan.FromSeconds(30));
-            var currentState = AreNotificationsSuppressed;
-            if (currentState != lastState)
+            try
             {
-                lastState = currentState;
-                SuppressionChanged?.Invoke(this, currentState);
+                var currentState = AreNotificationsSuppressed;
+                if (currentState != lastState)
+                {
+                    lastState = currentState;
+                    SuppressionChanged?.Invoke(this, currentState);
+                }
+            }
+            catch
+            {
+                // Ignore errors in monitoring
             }
         }
     }

@@ -3,6 +3,7 @@ namespace VoltDock.Core.Battery;
 using VoltDock.Core.Devices;
 using Microsoft.Extensions.Logging;
 using Windows.Devices.HumanInterfaceDevice;
+using Windows.Storage;
 using Windows.Storage.Streams;
 
 /// <summary>

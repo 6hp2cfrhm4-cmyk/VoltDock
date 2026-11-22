@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 public abstract class DiscoveryProviderBase : IDeviceDiscoveryProvider
 {
     protected readonly ILogger _logger;
-    private bool _isActive;
+    protected bool _isActive;
 
     protected DiscoveryProviderBase(ILogger logger)
     {
