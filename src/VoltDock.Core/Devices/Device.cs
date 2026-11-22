@@ -78,17 +78,17 @@ public sealed class Device : IEquatable<Device>
     /// <summary>
     /// Battery information for this device.
     /// </summary>
-    public DeviceBatteryInfo BatteryInfo { get; } = new();
+    public DeviceBatteryInfo BatteryInfo { get; init; } = new();
 
     /// <summary>
     /// Sources that provided battery readings for this device.
     /// </summary>
-    public HashSet<BatterySource> BatterySources { get; } = [];
+    public HashSet<BatterySource> BatterySources { get; init; } = [];
 
     /// <summary>
     /// Device interface paths (HID, Bluetooth, etc.) for deduplication.
     /// </summary>
-    public HashSet<string> InterfacePaths { get; } = [];
+    public HashSet<string> InterfacePaths { get; init; } = [];
 
     /// <summary>
     /// Windows Device Instance ID (for PnP devices).
@@ -103,12 +103,12 @@ public sealed class Device : IEquatable<Device>
     /// <summary>
     /// Custom metadata from manufacturer-specific providers.
     /// </summary>
-    public Dictionary<string, object> Metadata { get; } = [];
+    public Dictionary<string, object> Metadata { get; init; } = [];
 
     /// <summary>
     /// Timestamp when the device was first discovered.
     /// </summary>
-    public DateTimeOffset FirstSeen { get; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset FirstSeen { get; init; } = DateTimeOffset.UtcNow;
 
     /// <summary>
     /// Timestamp when the device was last updated.

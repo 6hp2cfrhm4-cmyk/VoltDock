@@ -235,7 +235,7 @@ public sealed class HidDiscoveryProvider : DiscoveryProviderBase
             // Try to get product name from device properties first
             if (deviceInfo.Properties.TryGetValue("System.ItemNameDisplay", out var name) && name is string n && !string.IsNullOrEmpty(n))
                 return n;
-            
+
             return deviceInfo.Name ?? "Unknown HID Device";
         }
         catch

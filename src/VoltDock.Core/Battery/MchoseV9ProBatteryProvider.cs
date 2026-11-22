@@ -210,7 +210,6 @@ public sealed class MchoseV9ProBatteryProvider : IManufacturerBatteryProvider
 
         public async ValueTask DisposeAsync()
         {
-            _hidDevice?.Dispose();
         }
     }
 }

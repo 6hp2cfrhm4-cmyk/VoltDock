@@ -176,7 +176,6 @@ public sealed class AttackSharkR2BatteryProvider : IManufacturerBatteryProvider
 
         public async ValueTask DisposeAsync()
         {
-            _hidDevice?.Dispose();
         }
     }
 }

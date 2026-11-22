@@ -151,7 +151,7 @@ public sealed class WindowsPowerDiscoveryProvider : DiscoveryProviderBase
                 componentName: "Battery");
 
             // Add remaining time if available
-            if (status.BatteryLifeTime > 0 && status.BatteryLifeTime != 0xFFFFFFFF)
+            if (status.BatteryLifeTime > 0 && status.BatteryLifeTime != -1)
             {
                 device.Metadata["RemainingTime"] = TimeSpan.FromSeconds(status.BatteryLifeTime);
             }

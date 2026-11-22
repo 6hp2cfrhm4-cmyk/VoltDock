@@ -18,8 +18,6 @@ public sealed class NotificationService : INotificationService
 
     public bool AreNotificationsSuppressed => false; // Simplified - Focus Assist check requires specific Windows API
 
-    public event EventHandler<bool>? SuppressionChanged;
-
     public NotificationService(ILogger<NotificationService> logger)
     {
         _logger = logger;
