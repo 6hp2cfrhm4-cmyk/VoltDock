@@ -1,0 +1,124 @@
+title = "VoltDock Gitleaks Config"
+
+[allowlist]
+description = "Allowlist for test files and examples"
+paths = [
+  "(?i)test",
+  "(?i)tests",
+  "(?i)spec",
+  "(?i)fixtures",
+  "(?i)examples",
+  "(?i)sample",
+  "(?i)mock",
+  "(?i)demo",
+  "README.md",
+  "CHANGELOG.md",
+  "LICENSE",
+  "CONTRIBUTING.md",
+  "SECURITY.md",
+  "PRIVACY.md"
+]
+commits = []
+stoplists = []
+
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api[_-]?key|apikey|secret[_-]?key|access[_-]?token)\s*[:=]\s*["']?[a-zA-Z0-9_-]{20,}["']?'''
+
+[[rules]]
+id = "generic-password"
+description = "Generic Password in Code"
+regex = '''(?i)(password|passwd|pwd)\s*[:=]\s*["'][^"']{8,}["']'''
+
+[[rules]]
+id = "connection-string"
+description = "Database Connection String"
+regex = '''(?i)(connection[_-]?string|conn[_-]?str)\s*[:=]\s*["'][^"']*["']'''
+
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----'''
+
+[[rules]]
+id = "aws-access-key"
+description = "AWS Access Key ID"
+regex = '''(?i)AKIA[0-9A-Z]{16}'''
+
+[[rules]]
+id = "aws-secret-key"
+description = "AWS Secret Access Key"
+regex = '''(?i)aws[_-]?secret[_-]?access[_-]?key\s*[:=]\s*["']?[A-Za-z0-9/+=]{40}["']?'''
+
+[[rules]]
+id = "github-token"
+description = "GitHub Personal Access Token"
+regex = '''(?i)gh[pousr]_[A-Za-z0-9_]{36,}'''
+
+[[rules]]
+id = "slack-token"
+description = "Slack Token"
+regex = '''(?i)xox[baprs]-[0-9a-zA-Z]{10,48}'''
+
+[[rules]]
+id = "discord-token"
+description = "Discord Bot Token"
+regex = '''(?i)[MN][A-Za-z\d]{23}\.[\w-]{6}\.[\w-]{27}'''
+
+[[rules]]
+id = "jwt-token"
+description = "JWT Token"
+regex = '''eyJ[A-Za-z0-9_-]+\.eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'''
+
+[[rules]]
+id = "ssh-private-key"
+description = "SSH Private Key"
+regex = '''-----BEGIN OPENSSH PRIVATE KEY-----'''
+
+[[rules]]
+id = "pgp-private-key"
+description = "PGP Private Key"
+regex = '''-----BEGIN PGP PRIVATE KEY BLOCK-----'''
+
+[[rules]]
+id = "azure-storage-key"
+description = "Azure Storage Key"
+regex = '''(?i)DefaultEndpointsProtocol=https;AccountName=[^;]+;AccountKey=[^;]+'''
+
+[[rules]]
+id = "npm-token"
+description = "NPM Token"
+regex = '''(?i)npm_[A-Za-z0-9]{36}'''
+
+[[rules]]
+id = "nuget-api-key"
+description = "NuGet API Key"
+regex = '''(?i)oy2[a-z0-9]{32}'''
+
+[[rules]]
+id = "docker-config"
+description = "Docker Config Auth"
+regex = '''"auth"\s*:\s*"[^"]+"'''
+
+[[rules]]
+id = "terraform-token"
+description = "Terraform Token"
+regex = '''(?i)TF_TOKEN_[a-zA-Z0-9_]+\s*=\s*["'][^"']+["']'''
+
+[[rules]]
+id = "vercel-token"
+description = "Vercel Token"
+regex = '''(?i)vercel[_-]?token\s*[:=]\s*["']?[A-Za-z0-9]{20,}["']?'''
+
+[[rules]]
+id = "netlify-token"
+description = "Netlify Token"
+regex = '''(?i)netlify[_-]?auth[_-]?token\s*[:=]\s*["']?[A-Za-z0-9]{20,}["']?'''
+
+# Allow test/demo values
+[[rules]]
+id = "test-values"
+description = "Test placeholder values"
+regex = '''(?i)(test|demo|example|placeholder|fake|mock|dummy|sample)[_-]?(key|token|secret|password)\s*[:=]\s*["']?[^"']*["']?'''
+allowlist = true

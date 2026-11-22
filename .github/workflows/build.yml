@@ -1,0 +1,136 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  SOLUTION_FILE: 'VoltDock.sln'
+
+jobs:
+  build:
+    name: Build (${{ matrix.configuration }}, ${{ matrix.platform }})
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+        platform: [x64, ARM64]
+      fail-fast: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build solution
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform ${{ matrix.platform }} --no-restore
+
+      - name: Run tests
+        run: dotnet test ${{ env.SOLUTION_FILE }} --configuration ${{ matrix.configuration }} --platform ${{ matrix.platform }} --no-build --logger "trx;LogFileName=test-results-${{ matrix.configuration }}-${{ matrix.platform }}.trx" --collect:"XPlat Code Coverage"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.configuration }}-${{ matrix.platform }}
+          path: "**/TestResults/*.trx"
+          retention-days: 30
+
+  format:
+    name: Check Formatting
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Check formatting
+        run: dotnet format ${{ env.SOLUTION_FILE }} --verify-no-changes --verbosity detailed
+
+  security:
+    name: Security Scan
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Run security audit
+        run: dotnet list ${{ env.SOLUTION_FILE }} package --vulnerable --include-transitive
+
+      - name: Check for secrets
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          config: .gitleaks.toml
+
+  package:
+    name: Package Release
+    needs: [build, format, security]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build Release
+        run: dotnet build ${{ env.SOLUTION_FILE }} --configuration Release --platform x64 --no-restore
+
+      - name: Publish x64
+        run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --platform x64 --self-contained false -o ./publish/x64
+
+      - name: Publish ARM64
+        run: dotnet publish src/VoltDock.App/VoltDock.App.csproj --configuration Release --platform ARM64 --self-contained false -o ./publish/ARM64
+
+      - name: Create Release Archive
+        run: |
+          cd ./publish
+          Compress-Archive -Path x64/* -DestinationPath VoltDock-x64.zip
+          Compress-Archive -Path ARM64/* -DestinationPath VoltDock-ARM64.zip
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ./publish/VoltDock-x64.zip
+            ./publish/VoltDock-ARM64.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

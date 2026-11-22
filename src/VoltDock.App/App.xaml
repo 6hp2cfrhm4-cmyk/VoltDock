@@ -1,0 +1,17 @@
+<Application x:Class="VoltDock.App.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:VoltDock.App"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/VoltDock.UI;component/Themes/Generic.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/VoltDock.UI;component/Themes/DarkGlass.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/VoltDock.UI;component/Themes/LightGlass.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/VoltDock.UI;component/Themes/Midnight.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/VoltDock.UI;component/Themes/Minimal.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
