@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoltDock.App.Views"
         xmlns:vm="clr-namespace:VoltDock.App.ViewModels"
-        xmlns:controls="clr-namespace:VoltDock.UI.Controls;assembly=VoltDock.UI"
         mc:Ignorable="d"
         Title="VoltDock" 
         Height="60" Width="400"
